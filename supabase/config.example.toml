@@ -1,0 +1,5 @@
+# Apply these settings in the company-owned Supabase project dashboard.
+# Public signups must be disabled. Team accounts are invitation-only.
+# Configure custom Auth SMTP before setting AUTH_SMTP_READY=true.
+# Allow redirect URLs for the preview and production /auth/confirm routes.
+# The invite template in invite-template.html sends token_hash to this route.

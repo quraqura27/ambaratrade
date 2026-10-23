@@ -1,0 +1,14 @@
+import { createClient } from "@supabase/supabase-js";
+const [email] = process.argv.slice(2);
+if (!email || !/^\S+@\S+\.\S+$/.test(email)) throw new Error("Usage: node scripts/invite-owner.mjs owner@company.com");
+if (process.env.AUTH_SMTP_READY !== "true") throw new Error("Verify Supabase Auth SMTP before inviting the owner.");
+const { NEXT_PUBLIC_SUPABASE_URL: url, SUPABASE_SECRET_KEY: key, APP_BASE_URL: base } = process.env;
+if (!url || !key || !base?.startsWith("https://")) throw new Error("Supabase and HTTPS site configuration is required.");
+const db = createClient(url, key, { auth: { persistSession: false } });
+const { count } = await db.from("staff_profiles").select("user_id", { count: "exact", head: true }).eq("role", "owner");
+if (count) throw new Error("An owner already exists. Do not create a second owner through this script.");
+const { data, error } = await db.auth.admin.inviteUserByEmail(email.toLowerCase(), { redirectTo: `${base}/auth/confirm` });
+if (error || !data.user) throw error ?? new Error("Invitation failed.");
+const { error: insertError } = await db.from("staff_profiles").insert({ user_id: data.user.id, email: email.toLowerCase(), role: "owner", active: true });
+if (insertError) throw insertError;
+console.log("Owner invitation submitted. Check the owner mailbox and complete the password setup.");

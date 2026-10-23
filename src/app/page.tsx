@@ -1,69 +1,20 @@
+import Link from "next/link";
 import Image from "next/image";
-import styles from "./page.module.css";
+import { publicProducts } from "@/lib/catalog";
+import { InquiryForm } from "@/components/inquiry-form";
 
-export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>
-            To get started, edit the{" "}
-            <code className={styles.code}>page.tsx</code> file.
-          </h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
-  );
+export const dynamic = "force-dynamic";
+export default async function Home() {
+  const products = await publicProducts();
+  return <>
+    <a className="skip-link" href="#main">Skip to content</a>
+    <header className="site-header"><div className="container header-inner"><Link className="brand" href="/" aria-label="Ambara GlobalTrade home"><span className="brand-mark"><span/><span/><span/></span><span className="brand-name"><strong>AMBARA</strong><small>GLOBALTRADE</small></span></Link><nav className="primary-nav" aria-label="Main navigation"><a href="#about">About us</a><a href="#products">Products</a><a href="#approach">Our approach</a><a className="nav-cta" href="#inquiry">Supply inquiry ↗</a></nav></div></header>
+    <main id="main"><section className="hero"><div className="container hero-inner"><div className="hero-copy"><p className="eyebrow light">PHYSICAL COMMODITY SUPPLY</p><h1>Clarity in supply.<br/><em>Accountability</em> in every order.</h1><p className="hero-lead">Ambara GlobalTrade supplies selected commodities to business buyers. We sell under clear specifications, provide agreed quality documentation, and stand behind the terms of every transaction.</p><div className="hero-actions"><a className="button button-primary" href="#products">Explore products ↗</a><a className="text-link light-link" href="#about">Get to know us ↓</a></div></div><div className="hero-art" aria-hidden="true"><div className="hero-art-index"><span>AMBARA</span><span>GLOBALTRADE</span></div><div className="orbit orbit-one"/><div className="orbit orbit-two"/><div className="art-centre"><span className="art-a">A</span></div><div className="art-caption">FROM SPECIFICATION <span>TO SUPPLY</span></div></div></div></section>
+    <section className="intro section" id="about"><div className="container intro-grid"><div className="section-heading"><p className="eyebrow">WHO WE ARE</p><h2>A direct supplier.<br/><span>One clear commitment.</span></h2></div><div className="intro-body"><p className="large-copy">We buy and sell physical commodities as your direct commercial counterparty. Our role is straightforward: define the goods clearly, fulfil the agreed order, and address product issues under clear sales terms.</p><p>Our portfolio is shaped by a focused approach to specification, quality evidence, and dependable execution. Each offer is built around the buyer’s requirements and destination.</p></div></div></section>
+    <section className="promise section"><div className="container"><p className="eyebrow">THE AMBARA STANDARD</p><h2>Confidence is built<br/>into the transaction.</h2><div className="promise-grid"><article className="promise-card"><span className="card-number">01</span><h3>Clear specifications</h3><p>Product, quantity, packaging, delivery basis, and commercial terms are defined before an order moves forward.</p></article><article className="promise-card"><span className="card-number">02</span><h3>Quality you can review</h3><p>Agreed product checks and supporting documents give buyers a practical basis to assess each shipment.</p></article><article className="promise-card"><span className="card-number">03</span><h3>Direct accountability</h3><p>GlobalTrade is the seller you contract with and the team that addresses fulfilment and product issues.</p></article></div></div></section>
+    <section className="product section" id="products"><div className="container"><div className="product-heading"><div><p className="eyebrow">PRODUCT CATALOGUE</p><h2>Selected supply.<br/><span>Specific standards.</span></h2></div><p>We publish products only after internal review. Specific availability, documents, and destination requirements are confirmed for each offer.</p></div>{products.length ? <div className="catalog-grid">{products.map(p=><article className="catalog-card" key={p.id}>{p.image_url&&<Image className="catalog-image" src={p.image_url} alt={p.image_alt||p.title} width={640} height={480} sizes="(max-width: 760px) 100vw, 33vw"/>}<p className="product-kicker">{p.category}</p><h3>{p.title}</h3><p>{p.summary}</p><Link className="button button-dark" href={`/products/${p.slug}`}>View product ↗</Link></article>)}</div> : <div className="catalog-empty"><h3>Our catalogue is being prepared.</h3><p>Tell us your commodity requirement and our team will review it directly.</p><a className="button button-dark" href="#inquiry">Send an inquiry ↗</a></div>}<p className="product-note">Product specifications, documentation, availability, and destination eligibility are established in the commercial offer.</p></div></section>
+    <section className="approach section" id="approach"><div className="container approach-grid"><div className="approach-heading"><p className="eyebrow light">HOW WE WORK</p><h2>A clear path from request to delivery.</h2><p>We define the goods and commercial terms before commitment and keep one accountable seller throughout.</p></div><div className="steps"><div className="step"><span>01</span><div><h3>Tell us what you need</h3><p>Share the product, quantity, destination, and requirements.</p></div></div><div className="step"><span>02</span><div><h3>Review a defined offer</h3><p>We provide the proposed goods, terms, documents, and delivery basis.</p></div></div><div className="step"><span>03</span><div><h3>Confirm quality and fulfilment</h3><p>Agreed checks support the order before shipment proceeds.</p></div></div></div></div></section>
+    <section className="inquiry section" id="inquiry"><div className="container inquiry-grid"><div className="inquiry-copy"><p className="eyebrow">START A CONVERSATION</p><h2>Let’s define your next supply requirement.</h2><p>Choose a published product or tell us about another commodity. Your inquiry is saved before any optional WhatsApp conversation.</p><div className="contact-methods"><a href="https://wa.me/6285776771577" target="_blank" rel="noreferrer"><span>WhatsApp</span><strong>+62 857 7677 1577</strong><span>↗</span></a></div></div><InquiryForm products={products.map(p=>({id:p.id,title:p.title}))}/></div></section></main>
+    <footer className="site-footer"><div className="container footer-top"><div><Link className="brand footer-brand" href="/">AMBARA GLOBALTRADE</Link><p>Reliable commodity supply. Direct accountability.</p></div><div className="footer-links"><a href="#about">About us</a><a href="#products">Products</a><a href="#inquiry">Inquiry</a><Link href="/privacy">Privacy</Link></div></div><div className="container footer-bottom"><span>© {new Date().getFullYear()} Ambara GlobalTrade</span><a href="#main">Back to top ↑</a></div></footer>
+  </>;
 }

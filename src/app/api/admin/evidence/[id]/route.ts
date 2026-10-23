@@ -1,0 +1,4 @@
+import { NextResponse } from "next/server";
+import { getStaff } from "@/lib/auth";
+import { getServiceClient } from "@/lib/supabase";
+export async function GET(_:Request,{params}:{params:Promise<{id:string}>}){const staff=await getStaff();if(staff?.role!=="owner")return new Response("Forbidden",{status:403});const {id}=await params;const db=getServiceClient();const {data:record}=await db.from("evidence_files").select("storage_path,display_name").eq("id",id).single();if(!record)return new Response("Not found",{status:404});const {data,error}=await db.storage.from("supplier-evidence").download(record.storage_path);if(error||!data)return new Response("Not found",{status:404});return new NextResponse(Buffer.from(await data.arrayBuffer()),{headers:{"Content-Type":data.type||"application/octet-stream","Content-Disposition":`attachment; filename*=UTF-8''${encodeURIComponent(record.display_name)}`,"Cache-Control":"private, no-store"}})}

@@ -1,0 +1,5 @@
+"use client";
+import { createBrowserClient } from "@supabase/ssr";
+import { useState,type FormEvent } from "react";
+import { useRouter } from "next/navigation";
+export function AcceptInvitation(){const [message,setMessage]=useState("");const router=useRouter();async function submit(e:FormEvent<HTMLFormElement>){e.preventDefault();const password=String(new FormData(e.currentTarget).get("password"));if(password.length<12){setMessage("Use at least 12 characters.");return;}const url=process.env.NEXT_PUBLIC_SUPABASE_URL,key=process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;if(!url||!key){setMessage("Login is not configured.");return;}const client=createBrowserClient(url,key);const {data}=await client.auth.getUser();if(!data.user){setMessage("Invitation has expired. Ask the owner to invite you again.");return;}const {error}=await client.auth.updateUser({password});if(error){setMessage(error.message);return;}router.push("/admin");router.refresh();}return <form onSubmit={submit}><label>New password<input type="password" name="password" required minLength={12} autoComplete="new-password"/></label><button>Activate account</button><p role="status">{message}</p></form>}
