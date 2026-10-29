@@ -2,6 +2,8 @@
 
 A staged replacement for the existing public site at `ambaratrade.com`. The existing Sites site stays live until this application passes the launch checks and the domain is switched. All website and team UI is in English.
 
+The existing Sites brochure carries the public product listing; this application remains staged until its backend and mail acceptance checks pass. The company-email migration records the requested addresses without creating mailboxes or inviting users.
+
 Use [LAUNCH_CHECKLIST.md](LAUNCH_CHECKLIST.md) to record the release gates before changing the domain.
 
 ## What is implemented
@@ -26,9 +28,9 @@ Use [LAUNCH_CHECKLIST.md](LAUNCH_CHECKLIST.md) to record the release gates befor
 1. Create the Vercel, Supabase, and Resend accounts under company control. Do not reuse a personal project/account. Choose the subscriptions only after reviewing current prices and limits.
 2. Create a Supabase project and apply migrations in order. Configure Auth with **public sign-up disabled**, email/password enabled, custom SMTP, a custom **Invite user** email template, and allowed redirect URLs for both preview and production `/auth/confirm`. Use the checked-in `supabase/invite-template.html` as the template; it sends `token_hash` to `/auth/confirm`, where the server verifies the invite and sets session cookies. Storage buckets are created by the first migration. Confirm no private bucket is public.
 3. Add Vercel preview environment variables based on `.env.example`. The Supabase secret key and Resend key are **server-side only**. Set a random `INQUIRY_RATE_SALT`. Set `APP_BASE_URL` to the HTTPS deployment URL used for preview tests, then to `https://ambaratrade.com` before issuing production quotes. Set `AUTH_SMTP_READY=true` only after Supabase Auth invitations are delivered through the configured sender.
-4. In Resend, verify the sending domain and add its DNS records. Set `RESEND_FROM_EMAIL` for a verified sender. The business inbox `hello@ambaratrade.com` is the Reply-To. Resend's transactional sender is not the receiving inbox.
+4. In Resend, verify the sending domain and add its DNS records. Set `RESEND_FROM_EMAIL` for a verified sender. The business inbox `info@ambaratrade.com` is the Reply-To. Resend's transactional sender is not the receiving inbox.
 5. Create and test the Zoho mailbox later as previously decided. Add Zoho MX/SPF/DKIM/DMARC records without removing required website records. Verify inbound and outbound replies. Only then set `company_settings.mail_ready=true` using a privileged database operation. This flag is intentionally absent from the normal owner settings form.
-6. Invite the chosen owner email: `node scripts/invite-owner.mjs owner@company.com` with the Supabase/Vercel environment loaded. Then the owner chooses a password on the invitation page, sets the company identity and notification recipients, uploads supplier evidence, and publishes the reviewed product.
+6. Invite the chosen owner email: `node scripts/invite-owner.mjs quraisyabdurrahman@ambaratrade.com` with the Supabase/Vercel environment loaded. Then the owner chooses a password on the invitation page, sets the company identity and notification recipients, uploads supplier evidence, and publishes the reviewed product.
 
 ## Run and verify
 
@@ -49,7 +51,7 @@ Acceptance checks in the preview deployment:
 4. Create a multi-item quote and verify line totals, tax, one currency, all terms, owner approval, PDF attachment, and QR page. Edit a local copy of the PDF and confirm the local file check fails.
 5. Simulate email rejection; verify status `approved_unsent`, retry once, and verify only one delivery. For `uncertain`, inspect Resend first and reconcile manually.
 6. Revise and send version 2; verify version 1 reports superseded. Check expiry and revocation states.
-7. Test the mailbox with a real reply to `hello@ambaratrade.com` and confirm both root and `www` website addresses over HTTPS.
+7. Test the mailbox with a real reply to `info@ambaratrade.com` and confirm both root and `www` website addresses over HTTPS.
 
 ## Domain cutover
 
@@ -58,10 +60,10 @@ Only after the checks pass: export the current authoritative DNS zone as the rol
 ## Launch gates still awaiting company input
 
 - Company-owned Vercel, Supabase, Resend, and later Zoho accounts.
-- Chosen owner email and inquiry notification recipients.
+- Owner email: `quraisyabdurrahman@ambaratrade.com`; default inquiry notifications go to this address when no recipients are configured. Public contact and Reply-To: `info@ambaratrade.com`. Mailbox delivery still needs verification.
 - Official registered address, company registration, tax number, and business telephone for the quotation PDF.
 - Real supplier inspection evidence and the owner's publication decision.
-- Verified two-way `hello@ambaratrade.com` mailbox and transactional sender.
+- Verified two-way `info@ambaratrade.com` mailbox and transactional sender.
 - Human review of privacy notice and commercial terms before public cutover.
 
 The system does not store inventory, purchase cost, or margin. Availability and landed costs are checked for each offer.

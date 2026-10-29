@@ -8,7 +8,7 @@ Keep the existing `ambaratrade.com` site live until every gate below is checked 
 - [ ] Create the company-controlled Vercel project from this repository, with preview and production environments.
 - [ ] Create the company-controlled Supabase project, run all migrations in order, and confirm `supplier-evidence` and `quotation-pdfs` are private.
 - [ ] Create the company-controlled Resend account; verify a transactional sending domain and configure the sender.
-- [ ] Create and test `hello@ambaratrade.com` for inbound and outbound replies. Configure Supabase Auth SMTP and the checked-in invite template. Test an invitation before setting `AUTH_SMTP_READY=true`.
+- [ ] Create and test `info@ambaratrade.com` for inbound and outbound replies. Configure Supabase Auth SMTP and the checked-in invite template. Test an invitation before setting `AUTH_SMTP_READY=true`.
 - [ ] Set all variables from `.env.example` separately for preview and production. Use the actual HTTPS preview URL for preview `APP_BASE_URL`; use `https://ambaratrade.com` for production. Keep secret values in the providers, never in Git.
 
 ## Business identity and first product
@@ -26,7 +26,7 @@ Keep the existing `ambaratrade.com` site live until every gate below is checked 
 - [ ] Confirm the product appears on desktop and phone, then pause and republish it to check public visibility.
 - [ ] Create and approve a multi-item quotation. Verify totals, currency, legal identity, attached PDF, QR status page, and local PDF integrity check. Test a modified PDF.
 - [ ] Test failed and uncertain email outcomes, revision, supersession, expiry, and revocation. Reconcile an uncertain provider outcome before retrying.
-- [ ] Receive and reply to a real message at `hello@ambaratrade.com`.
+- [ ] Receive and reply to a real message at `info@ambaratrade.com`.
 
 ## Domain cutover
 
